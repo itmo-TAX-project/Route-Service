@@ -1,6 +1,6 @@
 using Application.DTO;
 
-namespace Application.Ports;
+namespace Application.Repositories;
 
 public interface IRouteRepository
 {

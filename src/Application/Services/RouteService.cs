@@ -2,7 +2,9 @@ using Application.DTO;
 using Application.DTO.Enums;
 using Application.Options;
 using Application.Ports;
+using Application.Repositories;
 using Application.Services.Interfaces;
+using Microsoft.Extensions.Options;
 
 namespace Application.Services;
 
@@ -16,11 +18,11 @@ public class RouteService : IRouteService
 
     private readonly RoutingOptions _options;
 
-    public RouteService(IMarshrutisator marshrutisator, IRouteRepository routeRepository, RoutingOptions options)
+    public RouteService(IMarshrutisator marshrutisator, IRouteRepository routeRepository, IOptions<RoutingOptions> options)
     {
         _marshrutisator = marshrutisator;
         _routeRepository = routeRepository;
-        _options = options;
+        _options = options.Value;
     }
 
     public async Task<long> CalculateRoute(PointDto pickup, PointDto dropoff, CancellationToken ct)

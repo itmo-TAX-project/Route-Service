@@ -2,8 +2,7 @@ namespace Application.DTO.Enums;
 
 public enum SegmentType
 {
-    Road = 0,
-    Turn = 1,
-
-    Unspecified = 255,
+    Default = 0,
+    Road = 1,
+    Turn = 2,
 }

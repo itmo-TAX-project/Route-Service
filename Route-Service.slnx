@@ -14,6 +14,9 @@
     <Folder Name="/src/Presentation/">
         <Project Path="src/Presentation/Presentation.csproj" />
     </Folder>
+    <Folder Name="/src/Route-Service/">
+        <Project Path="src/Route-Service/Route-Service.csproj" />
+    </Folder>
     <Folder Name="/tests/">
     </Folder>
 </Solution>

@@ -1,7 +1,6 @@
 using Application.DTO;
-using Application.Ports;
+using Application.Repositories;
 using Npgsql;
-using System.Runtime.CompilerServices;
 using System.Text.Json;
 
 namespace Infrastructure.Repositories;
@@ -42,8 +41,8 @@ public class RouteRepository : IRouteRepository
         var pathPolylineJson = JsonSerializer.Serialize(route.PathPolyline);
         var segmentsJson = JsonSerializer.Serialize(route.Segments);
 
-        await using var connection = await _datasource.OpenConnectionAsync(cancellationToken);
-        await using var command = new NpgsqlCommand(sql, connection).ConfigureAwait(false);
+        await using NpgsqlConnection connection = await _datasource.OpenConnectionAsync(cancellationToken);
+        await using var command = new NpgsqlCommand(sql, connection);
 
         command.Parameters.AddWithValue("route_id", route.RouteId);
         command.Parameters.AddWithValue("path_polyline", pathPolylineJson);
@@ -51,10 +50,10 @@ public class RouteRepository : IRouteRepository
         command.Parameters.AddWithValue("duration_s", route.DurationS);
         command.Parameters.AddWithValue("segments", segmentsJson);
 
-        await command.ExecuteNonQueryAsync(cancellationToken);
+        await command.ExecuteNonQueryAsync(cancellationToken).ConfigureAwait(false);
     }
 
-    public async Task<RouteDto?> GetAsync(long routeId, CancellationToken cancellationToken)
+    public async Task<RouteDto?> GetAsync(long routeId, CancellationToken ct)
     {
         const string sql = """
                            SELECT route_id, path_polyline, distance_m, duration_s, segments
@@ -62,12 +61,12 @@ public class RouteRepository : IRouteRepository
                            WHERE route_id = @route_id;
                            """;
 
-        await using NpgsqlConnection connection = await _datasource.OpenConnectionAsync(cancellationToken);
+        await using NpgsqlConnection connection = await _datasource.OpenConnectionAsync(ct).ConfigureAwait(false);
         await using var command = new NpgsqlCommand(sql, connection);
         command.Parameters.AddWithValue("route_id", routeId);
 
-        await using NpgsqlDataReader reader = await command.ExecuteReaderAsync(cancellationToken);
-        if (!await reader.ReadAsync(cancellationToken))
+        await using NpgsqlDataReader reader = await command.ExecuteReaderAsync(ct).ConfigureAwait(false);
+        if (!await reader.ReadAsync(ct).ConfigureAwait(false))
         {
             return null;
         }
@@ -81,7 +80,7 @@ public class RouteRepository : IRouteRepository
         var polyline = JsonSerializer.Deserialize<List<PointDto>>(polylineJson) ?? [];
         var segments = JsonSerializer.Deserialize<List<SegmentDto>>(segmentsJson) ?? [];
 
-        return new RouteDto()
+        return new RouteDto
         {
             RouteId = id,
             PathPolyline = polyline,

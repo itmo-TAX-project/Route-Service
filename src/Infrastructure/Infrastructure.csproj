@@ -3,15 +3,24 @@
     <PropertyGroup>
         <ImplicitUsings>enable</ImplicitUsings>
         <Nullable>enable</Nullable>
+        <NoWarn>$(NoWarn);CA2007</NoWarn>
     </PropertyGroup>
-
     <ItemGroup>
       <ProjectReference Include="..\Application\Application.csproj" />
     </ItemGroup>
 
     <ItemGroup>
       <PackageReference Include="FluentMigrator" />
+      <PackageReference Include="FluentMigrator.Extensions.Postgres" />
+      <PackageReference Include="FluentMigrator.Runner.Core" />
+      <PackageReference Include="FluentMigrator.Runner.Postgres" />
+      <PackageReference Include="Itmo.Dev.Platform.Persistence.Abstractions" />
+      <PackageReference Include="Itmo.Dev.Platform.Persistence.Postgres" />
       <PackageReference Include="Npgsql.EntityFrameworkCore.PostgreSQL" />
+    </ItemGroup>
+
+    <ItemGroup>
+      <Folder Include="Docker\" />
     </ItemGroup>
 
 </Project>

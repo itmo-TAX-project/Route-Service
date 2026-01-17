@@ -19,10 +19,9 @@ message CalculateRouteResponse {
 }
 
 enum SegmentType {
-  ROAD = 0;
-  TURN = 1;
-  
-  UNSPECIFIED = 255;
+  DEFAULT = 0; 
+  ROAD = 1;
+  TURN = 2;
 }
 
 message Segment {

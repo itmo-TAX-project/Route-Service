@@ -4,5 +4,5 @@ namespace Application.Options;
 
 public class RoutingOptions
 {
-    public required Dictionary<SegmentType, double> RouteSpeed { get; set; }
+    public Dictionary<SegmentType, double> RouteSpeed { get; init; } = new();
 }

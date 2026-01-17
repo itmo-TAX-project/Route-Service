@@ -1,0 +1,47 @@
+﻿services:
+  route-service:
+    build:
+      context: ../../..
+      dockerfile: src/Route-Service/Dockerfile
+    container_name: route-service
+    depends_on:
+      - route-service-db
+    environment:
+      ASPNETCORE_URLS: http://0.0.0.0:8060
+      Postgres__Host: route-service-db
+      Postgres__Port: 5432
+      Postgres__Database: postgres
+      Postgres__Username: postgres
+      Postgres__Password: postgres
+      Postgres__SslMode: Prefer
+      GssEncMode: Disable
+    ports:
+      - "8060:8060"
+    networks:
+      - network
+
+  route-service-db:
+    image: postgres:latest
+    container_name: route-service-postgres
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgres
+      POSTGRES_DB: postgres
+    restart: unless-stopped
+    networks:
+      - network
+
+  zookeeper:
+    image: wurstmeister/zookeeper:latest
+    container_name: zookeeper
+    restart: unless-stopped
+    environment:
+      ALLOW_ANONYMOUS_LOGIN: "yes"
+    ports:
+      - "2181:2181"
+    networks:
+      - network
+
+networks:
+  network:
+    driver: bridge
